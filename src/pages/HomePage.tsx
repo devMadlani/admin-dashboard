@@ -1,5 +1,5 @@
-function App() {
+function HomePage() {
   return <h1>Hello from Admin Dashboard</h1>;
 }
 
-export default App;
+export default HomePage;
