@@ -13,6 +13,7 @@ import {
 } from "antd";
 import { Credentials } from "../../../Types";
 import { login, self } from "../../http/app";
+import { useAuthStore } from "../../store";
 
 const loginUser = async (credentials: Credentials) => {
   const { data } = await login(credentials);
@@ -25,6 +26,7 @@ const getSelf = async () => {
 };
 
 const Login = () => {
+  const { setUser } = useAuthStore();
   const { data: selfData, refetch } = useQuery({
     queryKey: ["self"],
     queryFn: getSelf,
@@ -37,7 +39,7 @@ const Login = () => {
     onSuccess: async () => {
       console.log("Login successfully");
       await refetch();
-      console.log(selfData, "userdata");
+      setUser(selfData);
     },
   });
 
