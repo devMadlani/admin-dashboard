@@ -29,12 +29,22 @@ const getSelf = async () => {
 const Login = () => {
   const { isAllowed } = usePermission();
   const { setUser, logout: logoutFromStore } = useAuthStore();
+
+  // self
   const { data: selfData, refetch } = useQuery({
     queryKey: ["self"],
     queryFn: getSelf,
     enabled: false,
   });
 
+  // logout
+  const { mutate: logoutMutate } = useMutation({
+    mutationKey: ["logout"],
+    mutationFn: logout,
+    onSuccess: async () => logoutFromStore(),
+  });
+
+  // login
   const { mutate, isPending, isError, error } = useMutation({
     mutationKey: ["login"],
     mutationFn: loginUser,
@@ -42,8 +52,8 @@ const Login = () => {
       await refetch();
 
       if (!isAllowed(selfData)) {
-        await logout();
-        logoutFromStore();
+        logoutMutate();
+
         return;
       }
 
