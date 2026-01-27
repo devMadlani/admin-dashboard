@@ -12,8 +12,9 @@ import {
   Space,
 } from "antd";
 import { Credentials } from "../../../Types";
-import { login, self } from "../../http/app";
+import { login, logout, self } from "../../http/app";
 import { useAuthStore } from "../../store";
+import { usePermission } from "../../hooks/usePermission";
 
 const loginUser = async (credentials: Credentials) => {
   const { data } = await login(credentials);
@@ -26,7 +27,8 @@ const getSelf = async () => {
 };
 
 const Login = () => {
-  const { setUser } = useAuthStore();
+  const { isAllowed } = usePermission();
+  const { setUser, logout: logoutFromStore } = useAuthStore();
   const { data: selfData, refetch } = useQuery({
     queryKey: ["self"],
     queryFn: getSelf,
@@ -37,8 +39,14 @@ const Login = () => {
     mutationKey: ["login"],
     mutationFn: loginUser,
     onSuccess: async () => {
-      console.log("Login successfully");
       await refetch();
+
+      if (!isAllowed(selfData)) {
+        await logout();
+        logoutFromStore();
+        return;
+      }
+
       setUser(selfData);
     },
   });
