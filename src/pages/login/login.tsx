@@ -31,7 +31,7 @@ const Login = () => {
   const { setUser, logout: logoutFromStore } = useAuthStore();
 
   // self
-  const { data: selfData, refetch } = useQuery({
+  const { refetch } = useQuery({
     queryKey: ["self"],
     queryFn: getSelf,
     enabled: false,
@@ -49,15 +49,14 @@ const Login = () => {
     mutationKey: ["login"],
     mutationFn: loginUser,
     onSuccess: async () => {
-      await refetch();
-
-      if (!isAllowed(selfData)) {
+      const selfData = await refetch();
+      if (!isAllowed(selfData.data)) {
         logoutMutate();
 
         return;
       }
 
-      setUser(selfData);
+      setUser(selfData.data);
     },
   });
 
@@ -95,7 +94,7 @@ const Login = () => {
             <Form
               initialValues={{
                 remember: true,
-                username: "madlanidev@gmail.com",
+                username: "admin@gmail.com",
                 password: "Test@123",
               }}
               onFinish={(values) => {
