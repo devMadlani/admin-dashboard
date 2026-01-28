@@ -87,7 +87,12 @@ const Dashboard = () => {
         <Layout>
           <Header style={{ padding: "0px 16px", background: colorBgContainer }}>
             <Flex gap="middle" justify="space-between" align="center">
-              <MyBadge type="info" label="Dev Madlani" />
+              <MyBadge
+                type="info"
+                label={
+                  user.role === "admin" ? "you are Admin" : user.tenant?.name
+                }
+              />
               <Space size={16}>
                 <div style={{ paddingTop: "4px" }}>
                   <Badge dot={true}>
