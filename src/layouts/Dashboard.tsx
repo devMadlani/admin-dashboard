@@ -124,7 +124,7 @@ const Dashboard = () => {
               </Space>
             </Flex>
           </Header>
-          <Content style={{ margin: "0 16px" }}>
+          <Content style={{ margin: 16 }}>
             {/* <Breadcrumb
               style={{ margin: "16px 0" }}
               items={[{ title: "User" }, { title: "Bill" }]}
@@ -132,7 +132,7 @@ const Dashboard = () => {
             <Outlet />
           </Content>
           <Footer style={{ textAlign: "center" }}>
-            Ant Design ©{new Date().getFullYear()} Created by Ant UED
+            Dev Madlani ©{new Date().getFullYear()} Created by
           </Footer>
         </Layout>
       </Layout>
