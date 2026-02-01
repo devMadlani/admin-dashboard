@@ -1,4 +1,5 @@
-import { Navigate, NavLink, Outlet } from "react-router-dom";
+import { NavLink, Navigate, Outlet } from "react-router-dom";
+import Icon, { BellFilled } from "@ant-design/icons";
 import { useAuthStore } from "../store";
 import {
   Avatar,
@@ -10,64 +11,83 @@ import {
   Space,
   theme,
 } from "antd";
-import Icon, { BellFilled } from "@ant-design/icons";
 import { useState } from "react";
+import Logo from "../components/icons/Logo";
 import Home from "../components/icons/Home";
 import UserIcon from "../components/icons/UserIcon";
 import { foodIcon } from "../components/icons/FoodIcon";
 import BasketIcon from "../components/icons/BasketIcon";
 import GiftIcon from "../components/icons/GiftIcon";
-import MyBadge from "../components/ui/badge/Badge";
 import { useMutation } from "@tanstack/react-query";
 import { logout } from "../http/api";
 
 const { Sider, Header, Content, Footer } = Layout;
 
-const items = [
-  {
-    key: "/",
-    icon: <Icon component={Home} />,
-    label: <NavLink to="/">Home</NavLink>,
-  },
-  {
-    key: "/users",
-    icon: <Icon component={UserIcon} />,
-    label: <NavLink to="/users">Users</NavLink>,
-  },
-  {
-    key: "restaurants",
-    icon: <Icon component={foodIcon} />,
-    label: <NavLink to="/restaurants">Restaurants</NavLink>,
-  },
-  {
-    key: "/products",
-    icon: <Icon component={BasketIcon} />,
-    label: <NavLink to="/products">Products</NavLink>,
-  },
-  {
-    key: "/promos",
-    icon: <Icon component={GiftIcon} />,
-    label: <NavLink to="/promos">Promos</NavLink>,
-  },
-];
+const getMenuItems = (role: string) => {
+  const baseItems = [
+    {
+      key: "/",
+      icon: <Icon component={Home} />,
+      label: <NavLink to="/">Home</NavLink>,
+    },
+    {
+      key: "/restaurants",
+      icon: <Icon component={foodIcon} />,
+      label: <NavLink to="/restaurants">Restaurants</NavLink>,
+    },
+    {
+      key: "/products",
+      icon: <Icon component={BasketIcon} />,
+      label: <NavLink to="/products">Products</NavLink>,
+    },
+    {
+      key: "/promos",
+      icon: <Icon component={GiftIcon} />,
+      label: <NavLink to="/promos">Promos</NavLink>,
+    },
+  ];
+
+  if (role === "admin") {
+    const menus = [...baseItems];
+    menus.splice(1, 0, {
+      key: "/users",
+      icon: <Icon component={UserIcon} />,
+      label: <NavLink to="/users">Users</NavLink>,
+    });
+    return menus;
+  }
+
+  return baseItems;
+};
 
 const Dashboard = () => {
-  const { user, logout: logoutFromStore } = useAuthStore();
+  const { logout: logoutFromStore } = useAuthStore();
+
   const { mutate: logoutMutate } = useMutation({
     mutationKey: ["logout"],
     mutationFn: logout,
-    onSuccess: async () => logoutFromStore(),
+    onSuccess: async () => {
+      logoutFromStore();
+      return;
+    },
   });
+
   const [collapsed, setCollapsed] = useState(false);
   const {
     token: { colorBgContainer },
   } = theme.useToken();
-  if (!user) {
+
+  // call getself
+  const { user } = useAuthStore();
+
+  if (user === null) {
     return <Navigate to="/auth/login" replace={true} />;
   }
+  const items = getMenuItems(user.role);
+
   return (
     <div>
-      <Layout style={{ minHeight: "100vh" }}>
+      <Layout style={{ minHeight: "100vh", background: colorBgContainer }}>
         <Sider
           collapsible
           theme="light"
@@ -75,8 +95,9 @@ const Dashboard = () => {
           onCollapse={(value) => setCollapsed(value)}
         >
           <div className="logo">
-            <img src="/icons/pizzaria-logo.svg" alt="" />
+            <Logo />
           </div>
+
           <Menu
             theme="light"
             defaultSelectedKeys={["/"]}
@@ -85,20 +106,24 @@ const Dashboard = () => {
           />
         </Sider>
         <Layout>
-          <Header style={{ padding: "0px 16px", background: colorBgContainer }}>
-            <Flex gap="middle" justify="space-between" align="center">
-              <MyBadge
-                type="info"
-                label={
-                  user.role === "admin" ? "you are Admin" : user.tenant?.name
+          <Header
+            style={{
+              paddingLeft: "16px",
+              paddingRight: "16px",
+              background: colorBgContainer,
+            }}
+          >
+            <Flex gap="middle" align="start" justify="space-between">
+              <Badge
+                text={
+                  user.role === "admin" ? "You are an admin" : user.tenant?.name
                 }
+                status="success"
               />
               <Space size={16}>
-                <div style={{ paddingTop: "4px" }}>
-                  <Badge dot={true}>
-                    <BellFilled style={{ fontSize: 20 }} />
-                  </Badge>
-                </div>
+                <Badge dot={true}>
+                  <BellFilled />
+                </Badge>
                 <Dropdown
                   menu={{
                     items: [
@@ -113,27 +138,20 @@ const Dashboard = () => {
                 >
                   <Avatar
                     style={{
-                      backgroundColor: "orange",
-                      color: "black",
-                      cursor: "pointer",
+                      backgroundColor: "#fde3cf",
+                      color: "#f56a00",
                     }}
                   >
-                    D
+                    U
                   </Avatar>
                 </Dropdown>
               </Space>
             </Flex>
           </Header>
-          <Content style={{ margin: 16 }}>
-            {/* <Breadcrumb
-              style={{ margin: "16px 0" }}
-              items={[{ title: "User" }, { title: "Bill" }]}
-            /> */}
+          <Content style={{ margin: "24px" }}>
             <Outlet />
           </Content>
-          <Footer style={{ textAlign: "center" }}>
-            Dev Madlani ©{new Date().getFullYear()} Created by
-          </Footer>
+          <Footer style={{ textAlign: "center" }}>Mernspace pizza shop</Footer>
         </Layout>
       </Layout>
     </div>
