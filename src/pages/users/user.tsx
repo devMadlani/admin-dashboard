@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Breadcrumb, Button, Drawer, Form, Space, Table, theme } from "antd";
 import { RightOutlined, PlusOutlined } from "@ant-design/icons";
 import { Link, Navigate } from "react-router-dom";
@@ -6,8 +7,8 @@ import { createUser, getUsers } from "../../http/api";
 import { CreateUserData, User } from "../../types";
 import { useAuthStore } from "../../store";
 import UsersFilter from "./UsersFilter";
-import React from "react";
 import UserForm from "./forms/UserForm";
+import { PER_PAGE } from "../../constants";
 
 const columns = [
   {
@@ -46,16 +47,24 @@ const Users = () => {
     token: { colorBgLayout },
   } = theme.useToken();
 
-  const [drawerOpen, setDrawerOpen] = React.useState(false);
+  const [queryParams, setQueryParams] = useState({
+    currentPage: 1,
+    perPage: PER_PAGE,
+  });
+
+  const [drawerOpen, setDrawerOpen] = useState(false);
   const {
     data: users,
     isLoading,
     isError,
     error,
   } = useQuery({
-    queryKey: ["users"],
+    queryKey: ["users", queryParams],
     queryFn: () => {
-      return getUsers().then((res) => res.data);
+      const queryString = new URLSearchParams(
+        queryParams as unknown as Record<string, string>,
+      ).toString();
+      return getUsers(queryString).then((res) => res.data);
     },
   });
 
@@ -106,7 +115,24 @@ const Users = () => {
           </Button>
         </UsersFilter>
 
-        <Table columns={columns} dataSource={users} rowKey={"id"} />
+        <Table
+          columns={columns}
+          dataSource={users?.data}
+          rowKey={"id"}
+          pagination={{
+            total: users?.total,
+            pageSize: queryParams.perPage,
+            current: queryParams.currentPage,
+            onChange: (page) => {
+              setQueryParams((prev) => {
+                return {
+                  ...prev,
+                  currentPage: page,
+                };
+              });
+            },
+          }}
+        />
 
         <Drawer
           title="Create user"
