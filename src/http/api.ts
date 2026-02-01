@@ -1,4 +1,4 @@
-import { Credentials } from "../../Types";
+import { Credentials } from "../Types";
 import { api } from "./client";
 
 // Auth service

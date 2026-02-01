@@ -4,7 +4,7 @@ import { Link, Navigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { useAuthStore } from "../../store";
 import React from "react";
-import TenantFilter from "./TenantFilter";
+import TenantFilter from "./TenantsFilter";
 import { getTenants } from "../../http/api";
 
 const columns = [

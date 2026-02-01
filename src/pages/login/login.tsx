@@ -11,7 +11,7 @@ import {
   Layout,
   Space,
 } from "antd";
-import { Credentials } from "../../../Types";
+import { Credentials } from "../../Types";
 import { login, logout, self } from "../../http/api";
 import { useAuthStore } from "../../store";
 import { usePermission } from "../../hooks/usePermission";
