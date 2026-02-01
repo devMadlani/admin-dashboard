@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Breadcrumb } from "antd";
 import { Link } from "react-router-dom";
 import { getUsers } from "../../http/api";
-import { User } from "../../store";
+import { User } from "../../../Types";
 
 const UserPage = () => {
   const {
