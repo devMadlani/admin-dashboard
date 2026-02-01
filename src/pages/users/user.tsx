@@ -123,9 +123,10 @@ const Users = () => {
     setDrawerOpen(false);
   };
 
-  const debouncedQUPdate = useMemo(() => {
+  const debouncedQUpdate = useMemo(() => {
     return debounce((value: string | undefined) => {
       setQueryParams((prev) => ({ ...prev, q: value }));
+      setQueryParams((prev) => ({ ...prev, q: value, currentPage: 1 }));
     }, 500);
   }, []);
 
@@ -149,9 +150,14 @@ const Users = () => {
       .reduce((acc, item) => ({ ...acc, ...item }), {});
 
     if ("q" in changedFilterFields) {
-      debouncedQUPdate(changedFilterFields.q);
+      debouncedQUpdate(changedFilterFields.q);
     } else {
       setQueryParams((prev) => ({ ...prev, ...changedFilterFields }));
+      setQueryParams((prev) => ({
+        ...prev,
+        ...changedFilterFields,
+        currentPage: 1,
+      }));
     }
   };
 
