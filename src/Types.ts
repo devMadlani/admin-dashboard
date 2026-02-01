@@ -12,12 +12,6 @@ export type User = {
   tenant: Tenant | null;
 };
 
-export type Tenant = {
-  id: number;
-  name: string;
-  address: string;
-};
-
 export type CreateUserData = {
   email: string;
   firstName: string;
@@ -27,7 +21,18 @@ export type CreateUserData = {
   tenantId: number;
 };
 
+export type Tenant = {
+  id: number;
+  name: string;
+  address: string;
+};
+
 export type FieldData = {
   name: string[];
   value?: string;
+};
+
+export type CreateTenantData = {
+  name: string;
+  address: string;
 };
