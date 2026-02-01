@@ -19,7 +19,7 @@ import BasketIcon from "../components/icons/BasketIcon";
 import GiftIcon from "../components/icons/GiftIcon";
 import MyBadge from "../components/ui/badge/Badge";
 import { useMutation } from "@tanstack/react-query";
-import { logout } from "../http/app";
+import { logout } from "../http/api";
 
 const { Sider, Header, Content, Footer } = Layout;
 
