@@ -20,6 +20,7 @@ import BasketIcon from "../components/icons/BasketIcon";
 import GiftIcon from "../components/icons/GiftIcon";
 import { useMutation } from "@tanstack/react-query";
 import { logout } from "../http/api";
+import MyBadge from "../components/ui/badge/Badge";
 
 const { Sider, Header, Content, Footer } = Layout;
 
@@ -106,19 +107,14 @@ const Dashboard = () => {
           />
         </Sider>
         <Layout>
-          <Header
-            style={{
-              paddingLeft: "16px",
-              paddingRight: "16px",
-              background: colorBgContainer,
-            }}
-          >
+          <Header style={{ padding: "0px 16px", background: colorBgContainer }}>
             <Flex gap="middle" align="start" justify="space-between">
-              <Badge
-                text={
-                  user.role === "admin" ? "You are an admin" : user.tenant?.name
+              <MyBadge
+                style={{ alignSelf: "center" }}
+                type="info"
+                label={
+                  user.role === "admin" ? "you are Admin" : user.tenant?.name
                 }
-                status="success"
               />
               <Space size={16}>
                 <Badge dot={true}>
