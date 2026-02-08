@@ -22,3 +22,4 @@ export const updateUser = (user: CreateUserData, id: string) =>
   api.patch(`${AUTH_SERVICE}/users/${id}`, user);
 
 // Catalog serice
+export const getCategories = () => api.get(`${CATALOG_SERVICE}/categories`);
