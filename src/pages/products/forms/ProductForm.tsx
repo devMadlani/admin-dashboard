@@ -22,7 +22,7 @@ import { useAuthStore } from "../../../store";
 const ProductForm = ({ form }: { form: FormInstance }) => {
   const { user } = useAuthStore();
   const selectedCategory = Form.useWatch("categoryId");
-  console.log(selectedCategory);
+
   const { data: categories } = useQuery({
     queryKey: ["categories"],
     queryFn: () => {
@@ -41,7 +41,7 @@ const ProductForm = ({ form }: { form: FormInstance }) => {
     <Row>
       <Col span={24}>
         <Space direction="vertical" size="large">
-          <Card title="Product info" bordered={false}>
+          <Card title="Product info" variant="borderless">
             <Row gutter={20}>
               <Col span={12}>
                 <Form.Item
@@ -104,7 +104,7 @@ const ProductForm = ({ form }: { form: FormInstance }) => {
               </Col>
             </Row>
           </Card>
-          <Card title="Product image" bordered={false}>
+          <Card title="Product image" variant="borderless">
             <Row gutter={20}>
               <Col span={12}>
                 <ProductImage initialImage={form.getFieldValue("image")} />
@@ -112,7 +112,7 @@ const ProductForm = ({ form }: { form: FormInstance }) => {
             </Row>
           </Card>
           {user?.role !== "manager" && (
-            <Card title="Tenant info" bordered={false}>
+            <Card title="Tenant info" variant="borderless">
               <Row gutter={24}>
                 <Col span={24}>
                   <Form.Item
@@ -152,7 +152,7 @@ const ProductForm = ({ form }: { form: FormInstance }) => {
             <Attributes selectedCategory={selectedCategory} />
           )}
 
-          <Card title="Other properties" bordered={false}>
+          <Card title="Other properties" variant="borderless">
             <Row gutter={24}>
               <Col span={24}>
                 <Space>

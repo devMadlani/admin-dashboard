@@ -90,7 +90,6 @@ const Users = () => {
 
   React.useEffect(() => {
     if (currentEditingUser) {
-      console.log("currentEditingUser", currentEditingUser);
       setDrawerOpen(true);
       form.setFieldsValue({
         ...currentEditingUser,
@@ -243,7 +242,6 @@ const Users = () => {
             pageSize: queryParams.perPage,
             current: queryParams.currentPage,
             onChange: (page) => {
-              console.log(page);
               setQueryParams((prev) => {
                 return {
                   ...prev,
@@ -252,7 +250,6 @@ const Users = () => {
               });
             },
             showTotal: (total: number, range: number[]) => {
-              console.log(total, range);
               return `Showing ${range[0]}-${range[1]} of ${total} items`;
             },
           }}

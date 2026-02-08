@@ -21,7 +21,7 @@ const Attributes = ({ selectedCategory }: PricingProps) => {
   return (
     <Card
       title={<Typography.Text>Attributes</Typography.Text>}
-      bordered={false}
+      variant="borderless"
     >
       {fetchedCategory.attributes.map((attribute) => {
         return (

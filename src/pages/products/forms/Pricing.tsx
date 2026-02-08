@@ -21,7 +21,7 @@ const Pricing = ({ selectedCategory }: PricingProps) => {
   return (
     <Card
       title={<Typography.Text>Product price</Typography.Text>}
-      bordered={false}
+      variant="borderless"
     >
       {Object.entries(fetchedCategory?.priceConfiguration).map(
         ([configurationKey, configurationValue]) => {

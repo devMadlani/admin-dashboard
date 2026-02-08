@@ -170,7 +170,6 @@ const Tenants = () => {
             pageSize: queryParams.perPage,
             current: queryParams.currentPage,
             onChange: (page) => {
-              console.log(page);
               setQueryParams((prev) => {
                 return {
                   ...prev,

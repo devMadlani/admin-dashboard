@@ -110,8 +110,6 @@ const Products = () => {
     if (selectedProduct) {
       setDrawerOpen(true);
 
-      console.log("seletedProduct", selectedProduct.priceConfiguration);
-
       const priceConfiguration = Object.entries(
         selectedProduct.priceConfiguration,
       ).reduce((acc, [key, value]) => {
@@ -336,7 +334,6 @@ const Products = () => {
             pageSize: queryParams.limit,
             current: queryParams.page,
             onChange: (page) => {
-              console.log(page);
               setQueryParams((prev) => {
                 return {
                   ...prev,
@@ -345,7 +342,6 @@ const Products = () => {
               });
             },
             showTotal: (total: number, range: number[]) => {
-              console.log(total, range);
               return `Showing ${range[0]}-${range[1]} of ${total} items`;
             },
           }}

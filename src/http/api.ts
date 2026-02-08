@@ -23,6 +23,9 @@ export const updateUser = (user: CreateUserData, id: string) =>
 
 // Catalog serice
 export const getCategories = () => api.get(`${CATALOG_SERVICE}/categories`);
+export const getCategory = (id: string) =>
+  api.get(`${CATALOG_SERVICE}/categories/${id}`);
+
 export const getProducts = (queryParam: string) =>
   api.get(`${CATALOG_SERVICE}/products?${queryParam}`);
 
@@ -31,8 +34,6 @@ export const createProduct = (product: FormData) =>
     headers: { "Content-Type": "multipart/form-data" },
   });
 
-export const getCategory = (id: string) =>
-  api.get(`${CATALOG_SERVICE}/categories/${id}`);
 export const updateProduct = (product: FormData, id: string) => {
   return api.put(`${CATALOG_SERVICE}/products/${id}`, product, {
     headers: { "Content-Type": "multipart/form-data" },

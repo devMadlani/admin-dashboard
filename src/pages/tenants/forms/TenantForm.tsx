@@ -4,7 +4,7 @@ const TenantForm = () => {
   return (
     <Row>
       <Col span={24}>
-        <Card title="Basic info" bordered={false} style={{ width: "100%" }}>
+        <Card title="Basic info" variant="borderless" style={{ width: "100%" }}>
           <Row gutter={20}>
             <Col span={12}>
               <Form.Item

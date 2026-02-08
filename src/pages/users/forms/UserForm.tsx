@@ -18,7 +18,7 @@ const UserForm = ({ isEditMode = false }: { isEditMode: boolean }) => {
     <Row>
       <Col span={24}>
         <Space direction="vertical" size="large">
-          <Card title="Basic info" bordered={false}>
+          <Card title="Basic info" variant="borderless">
             <Row gutter={20}>
               <Col span={12}>
                 <Form.Item
@@ -69,7 +69,7 @@ const UserForm = ({ isEditMode = false }: { isEditMode: boolean }) => {
             </Row>
           </Card>
           {!isEditMode && (
-            <Card title="Security info" bordered={false}>
+            <Card title="Security info" variant="borderless">
               <Row gutter={20}>
                 <Col span={12}>
                   <Form.Item
@@ -89,7 +89,7 @@ const UserForm = ({ isEditMode = false }: { isEditMode: boolean }) => {
             </Card>
           )}
 
-          <Card title="Role" bordered={false}>
+          <Card title="Role" variant="borderless">
             <Row gutter={20}>
               <Col span={12}>
                 <Form.Item
