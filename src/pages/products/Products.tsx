@@ -5,11 +5,16 @@ import {
   Form,
   Image,
   Space,
+  Spin,
   Table,
   Tag,
   Typography,
 } from "antd";
-import { RightOutlined, PlusOutlined } from "@ant-design/icons";
+import {
+  RightOutlined,
+  PlusOutlined,
+  LoadingOutlined,
+} from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import ProductsFilter from "./ProductsFilter";
 import { FieldData, Product } from "../../types";
@@ -79,7 +84,12 @@ const Products = () => {
     page: 1,
   });
 
-  const { data: products } = useQuery({
+  const {
+    data: products,
+    isFetching,
+    isError,
+    error,
+  } = useQuery({
     queryKey: ["products", queryParams],
     queryFn: () => {
       const filteredParams = Object.fromEntries(
@@ -124,6 +134,15 @@ const Products = () => {
               { title: "Products" },
             ]}
           />
+
+          {isFetching && (
+            <Spin
+              indicator={<LoadingOutlined style={{ fontSize: 24 }} spin />}
+            />
+          )}
+          {isError && (
+            <Typography.Text type="danger">{error.message}</Typography.Text>
+          )}
         </Flex>
 
         <Form form={filterForm} onFieldsChange={onFilterChange}>
