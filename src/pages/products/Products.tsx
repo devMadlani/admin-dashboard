@@ -28,7 +28,7 @@ import {
   useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
-import { createProduct, getProducts } from "../../http/api";
+import { createProduct, getProducts, updateProduct } from "../../http/api";
 import { format } from "date-fns";
 import { debounce } from "lodash";
 import { useAuthStore } from "../../store";
@@ -90,6 +90,9 @@ const Products = () => {
   const [filterForm] = Form.useForm();
   const [form] = Form.useForm();
 
+  const [selectedProduct, setCurrentProduct] = React.useState<Product | null>(
+    null,
+  );
   const { user } = useAuthStore();
 
   const {
@@ -102,6 +105,43 @@ const Products = () => {
     page: 1,
     tenantId: user!.role === "manager" ? user?.tenant?.id : undefined,
   });
+
+  React.useEffect(() => {
+    if (selectedProduct) {
+      setDrawerOpen(true);
+
+      console.log("seletedProduct", selectedProduct.priceConfiguration);
+
+      const priceConfiguration = Object.entries(
+        selectedProduct.priceConfiguration,
+      ).reduce((acc, [key, value]) => {
+        const stringifiedKey = JSON.stringify({
+          configurationKey: key,
+          priceType: value.priceType,
+        });
+
+        return {
+          ...acc,
+          [stringifiedKey]: value.availableOptions,
+        };
+      }, {});
+
+      const attributes = selectedProduct.attributes.reduce((acc, item) => {
+        return {
+          ...acc,
+          [item.name]: item.value,
+        };
+      }, {});
+
+      form.setFieldsValue({
+        ...selectedProduct,
+        priceConfiguration,
+        attributes,
+        // todo: fix this
+        categoryId: selectedProduct.category._id,
+      });
+    }
+  }, [selectedProduct, form]);
 
   const {
     data: products,
@@ -144,8 +184,14 @@ const Products = () => {
   const queryClient = useQueryClient();
   const { mutate: productMutate, isPending: isCreateLoading } = useMutation({
     mutationKey: ["product"],
-    mutationFn: async (data: FormData) =>
-      createProduct(data).then((res) => res.data),
+    mutationFn: async (data: FormData) => {
+      if (selectedProduct) {
+        // edit mode
+        return updateProduct(data, selectedProduct._id).then((res) => res.data);
+      } else {
+        return createProduct(data).then((res) => res.data);
+      }
+    },
     onSuccess: async () => {
       queryClient.invalidateQueries({ queryKey: ["products"] });
       form.resetFields();
@@ -189,7 +235,7 @@ const Products = () => {
       {},
     );
 
-    const categoryId = JSON.parse(form.getFieldValue("categoryId"))._id;
+    const categoryId = form.getFieldValue("categoryId");
     // const currentAttrs = {
     //     isHit: 'No',
     //     Spiciness: 'Less',
@@ -267,10 +313,15 @@ const Products = () => {
             ...columns,
             {
               title: "Actions",
-              render: () => {
+              render: (_, record: Product) => {
                 return (
                   <Space>
-                    <Button type="link" onClick={() => {}}>
+                    <Button
+                      type="link"
+                      onClick={() => {
+                        setCurrentProduct(record);
+                      }}
+                    >
                       Edit
                     </Button>
                   </Space>
@@ -301,12 +352,13 @@ const Products = () => {
         />
 
         <Drawer
-          title={"Add Product"}
+          title={selectedProduct ? "Update Product" : "Add Product"}
           width={720}
           styles={{ body: { backgroundColor: colorBgLayout } }}
           destroyOnClose={true}
           open={drawerOpen}
           onClose={() => {
+            setCurrentProduct(null);
             form.resetFields();
             setDrawerOpen(false);
           }}
@@ -314,6 +366,7 @@ const Products = () => {
             <Space>
               <Button
                 onClick={() => {
+                  setCurrentProduct(null);
                   form.resetFields();
                   setDrawerOpen(false);
                 }}
@@ -331,7 +384,7 @@ const Products = () => {
           }
         >
           <Form layout="vertical" form={form}>
-            <ProductForm />
+            <ProductForm form={form} />
           </Form>
         </Drawer>
       </Space>
